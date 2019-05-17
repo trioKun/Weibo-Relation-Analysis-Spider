@@ -108,9 +108,7 @@ if __name__ == "__main__":
     import os
     curr_path = os.path.dirname(__file__)
     res_file = open(curr_path + r"\analysis_result.txt", "w")
-    print(Datetime.now())
-    user_id = 0
+    user_id = 0        # put your uid here
     ana = Analyzer(user_id)
-    print(Datetime.now())
     ana.output(file=res_file)
     res_file.close()
