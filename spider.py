@@ -226,7 +226,7 @@ def check_headers(uid):
         html = requests.get(url, timeout=10, cookies=cookie, headers=header).content
         selector = etree.HTML(html)
         try:
-            print("work well:" + get_nickname(selector))
+            print("work well:", get_last_tweet_time(selector))
         except Exception as e:
             print(e)
         time.sleep(0.3)
@@ -241,7 +241,7 @@ def check_cookies(uid):
         html = requests.get(url, timeout=10, cookies=cookie, headers=header).content
         selector = etree.HTML(html)
         try:
-            print(get_nickname(selector))
+            print("work well:", get_last_tweet_time(selector))
         except Exception as e:
             print(e)
         time.sleep(0.3)
