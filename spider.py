@@ -229,6 +229,7 @@ def check_headers(uid):
             print("work well:", get_last_tweet_time(selector))
         except Exception as e:
             print(e)
+        print()
         time.sleep(0.3)
 
 
@@ -244,6 +245,7 @@ def check_cookies(uid):
             print("work well:", get_last_tweet_time(selector))
         except Exception as e:
             print(e)
+        print()
         time.sleep(0.3)
 
 
