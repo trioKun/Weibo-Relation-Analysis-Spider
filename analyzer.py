@@ -49,12 +49,11 @@ class Analyzer:
         self.usr_nodes[0].dist = 0
         self.usr_nodes[0].in_degree = 0
         curr = 0
-        last_level = -1
         while curr < len(self.usr_nodes) and self.usr_nodes[curr].dist <= level:
             for follow_uid in self.usr_nodes[curr].follow_uid_list:
                 if follow_uid in uids:
                     u_ind = uids.index(follow_uid)
-                    if cert[u_ind] in Pot_Cert:
+                    if self.usr_nodes[curr].dist < level and cert[u_ind] in Pot_Cert:
                         cert[u_ind] += 2 ** (level - self.usr_nodes[curr].dist)
                         if cert[u_ind] == Certed:
                             if calc_days_until_now(self.get_last_tweet_time_fullver(follow_uid)) > 365:
