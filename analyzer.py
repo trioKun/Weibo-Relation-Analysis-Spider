@@ -30,10 +30,10 @@ class Analyzer:
         :param threads: max number of child threads, depends on the number of your cookies
         """
         self.root_uid = uid
-        self.threads = 1 + threads        # maximum threads
+        self.threads = 2 + threads        # maximum child threads
         self.bfs(level)           # construct relationship graph by BFS
 
-    # Using a valid user identification system. I will explain it in README.md file.
+    # Using a valid user identification system. It will be explained in README.md file.
     def bfs(self, level):           # search until [level]st level
         cert = list()           # certifications, decides whether to put a user into usr_nodes
         # value of cert[i]:
@@ -104,10 +104,12 @@ class Analyzer:
 
 
 if __name__ == "__main__":
+    user_id = 0
+    ana = Analyzer(user_id)
+    
+    # output
     import os
     curr_path = os.path.dirname(__file__)
     res_file = open(curr_path + r"\analysis_result.txt", "w")
-    user_id = 0        # put your uid here
-    ana = Analyzer(user_id)
     ana.output(file=res_file)
     res_file.close()
