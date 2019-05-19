@@ -105,7 +105,7 @@ class Analyzer:
 
 if __name__ == "__main__":
     user_id = 0
-    ana = Analyzer(user_id)
+    ana = Analyzer(user_id, level=2)
     
     # output
     import os
