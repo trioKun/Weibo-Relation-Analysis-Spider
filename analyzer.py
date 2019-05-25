@@ -8,7 +8,7 @@ def scoring(user):              # weight in analyzer output order
 
 
 # MultiThreading solving the too long answering time problem
-class Thread(threading.Thread):
+class GetUser(threading.Thread):
     def __init__(self, uid, pa_ind, ch_ind):
         threading.Thread.__init__(self)
         self.uid = uid
@@ -16,12 +16,16 @@ class Thread(threading.Thread):
         self.ch_index = ch_ind
 
     def run(self):
-        Analyzer.usr_nodes[self.ch_index] = User(self.uid)
+        tmp = User(self.uid)
+        Analyzer.mutex.acquire()
+        Analyzer.usr_nodes[self.ch_index] = tmp
         Analyzer.usr_nodes[self.ch_index].dist = Analyzer.usr_nodes[self.pa_index].dist + 1
+        Analyzer.mutex.release()
 
 
 class Analyzer:
     usr_nodes = []        # containing all detected users
+    mutex = lock = threading.Lock()
 
     def __init__(self, uid, level=2, threads=5):
         """
@@ -65,7 +69,7 @@ class Analyzer:
                                 self.usr_nodes.append(User())
                                 while threading.activeCount() >= self.threads:
                                     time.sleep(0.1)
-                                Thread(follow_uid, curr, ins_index).start()
+                                GetUser(follow_uid, curr, ins_index).start()
                     elif cert[u_ind] == Exist:           # increase corresponding attributes
                         n_ind = find_in_usrs(self.usr_nodes, follow_uid)
                         while n_ind == UserNotFound:
@@ -83,7 +87,7 @@ class Analyzer:
                         self.usr_nodes.append(User())
                         while threading.activeCount() >= self.threads:
                             time.sleep(0.1)
-                        Thread(follow_uid, curr, ins_index).start()
+                        GetUser(follow_uid, curr, ins_index).start()
                     else:
                         cert.append(2 ** (level - self.usr_nodes[curr].dist))
             curr += 1
