@@ -159,10 +159,12 @@ def get_follow_in_page(uid, page_no):
     else:
         info = info[0]
 
-    follow_fans = [int(item[2:-1]) for item in info.xpath("//text()")
-                   if item[:2] == "粉丝" and item[-1] == "人"]           # for example, "粉丝221人"
+    follow_fans = [get_num_at_begin(item[2:]) for item in info.xpath("//td/text()")
+                   if item[:2] == "粉丝" and item[2] != "["]           # for example, "粉丝221人"
     follow_urls = info.xpath("//td[@valign][@style]/a[@href]/@href")
+    assert len(follow_urls) == len(follow_fans)
     # follow_urls[i] <==> follow_fans[i]
+    
     follow_uids = []
     for i in range(len(follow_urls)):
         if follow_fans[i] < 1000:
