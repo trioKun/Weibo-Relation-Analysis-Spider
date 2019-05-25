@@ -196,15 +196,15 @@ def eid_to_uid(eid):
     return uid
 
 
-WebExcepts = (IndexError, AttributeError, ValueError,
-             ReadTimeout, HTTPError, RequestException)
+SpiderExcepts = (IndexError, AttributeError, ValueError,
+                ReadTimeout, HTTPError, RequestException)
 
 
 # exception wrapper function to solve no-answer and wrong-answer problem
 def except_wrapper_func(func, *args):
     try:
         return func(*args)
-    except WebExcepts:
+    except SpiderExcepts:
         # Exceptions rise because of the page error in most cases
         if func == get_last_tweet_time_fullver:       # called by Analyzer.bfs directly
             max_wait_time = 30
