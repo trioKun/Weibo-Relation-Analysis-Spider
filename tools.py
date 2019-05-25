@@ -68,6 +68,15 @@ def find_in_usrs(users, uid):
     else:
         return UserNotFound
 
+    
+def get_num_at_begin(str):
+    i = 1
+    for i in range(1, len(str)+1):
+        if not str[:i].isdigit():
+            i -= 1
+            break
+    return int(str[:i])    
+
 
 if __name__ == "__main__":
     print(null_time)
