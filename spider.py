@@ -1,7 +1,7 @@
 import time
 import random
 import requests
-from requests.exceptions import ReadTimeout,HTTPError,RequestException
+from requests.exceptions import ReadTimeout, HTTPError, RequestException
 from lxml import etree
 from settings import *
 from tools import *
@@ -105,8 +105,17 @@ def get_last_tweet_time(sel):
 
     info = info[0].xpath("//span[@class='ct']/text()")
     # ignore meaningless tweets， may be several
-    while "生日动态" in info[last_tweet_index] or "粉丝红包" in info[last_tweet_index]:
+    while last_tweet_index < len(info) and \
+            ("生日动态" in info[last_tweet_index]
+             or "粉丝红包" in info[last_tweet_index]
+             or "用户任务" in info[last_tweet_index]):
         last_tweet_index += 1
+
+    if last_tweet_index >= len(info):
+        if "置顶" in sticky:
+            last_tweet_index = 0
+        else:
+            return null_time
 
     info = info[last_tweet_index]
     str_time = info.split(u'\xa0')[0]
@@ -158,16 +167,17 @@ def get_follow_in_page(uid, page_no):
         return []
     else:
         info = info[0]
-
+    
     follow_fans = [get_num_at_begin(item[2:]) for item in info.xpath("//td/text()")
                    if item[:2] == "粉丝" and item[2] != "["]           # for example, "粉丝221人"
     follow_urls = info.xpath("//td[@valign][@style]/a[@href]/@href")
-    assert len(follow_urls) == len(follow_fans)
+    # assert len(follow_urls) == len(follow_fans)
     # follow_urls[i] <==> follow_fans[i]
     
     follow_uids = []
     for i in range(len(follow_urls)):
-        if follow_fans[i] < 1000:
+        MaxFans = 1000
+        if follow_fans[i] < MaxFans:        # filter
             if follow_urls[i][:19] == "https://weibo.cn/u/":
                 f_uid = int(follow_urls[i][19:])
             else:
@@ -197,7 +207,7 @@ def eid_to_uid(eid):
 
 
 SpiderExcepts = (IndexError, AttributeError, ValueError,
-                ReadTimeout, HTTPError, RequestException)
+             ReadTimeout, HTTPError, RequestException)
 
 
 # exception wrapper function to solve no-answer and wrong-answer problem
@@ -206,12 +216,15 @@ def except_wrapper_func(func, *args):
         return func(*args)
     except SpiderExcepts:
         # Exceptions rise because of the page error in most cases
-        if func == get_last_tweet_time_fullver:       # called by Analyzer.bfs directly
-            max_wait_time = 30
-        else:                         # called when a child thread during constructing User
-            max_wait_time = 100
+
+        print("\t\t exception rises during " + func.__name__ + str(args) + "    sleeping...")
+        
         # Once program don't get answer from website, sleep for a few seconds
-        time.sleep(random.randrange(max_wait_time))
+        if func == get_last_tweet_time_fullver:       # called by Analyzer.bfs directly
+            max_wait_time = 60
+        else:                         # called when a child thread during constructing User
+            max_wait_time = 180
+        time.sleep(random.randrange(max_wait_time//2, max_wait_time))
         return except_wrapper_func(func, *args)
 
 
@@ -239,7 +252,6 @@ def check_headers(uid):
             print(get_last_tweet_time(selector))
         except Exception as e:
             print(e)
-        print()
         time.sleep(0.3)
 
 
@@ -255,10 +267,9 @@ def check_cookies(uid):
             print(get_last_tweet_time(selector))
         except Exception as e:
             print(e)
-        print()
         time.sleep(0.3)
 
 
 if __name__ == "__main__":
-    user_id = 0
+    user_id = 0              # put user ID here
     general_check(user_id)
