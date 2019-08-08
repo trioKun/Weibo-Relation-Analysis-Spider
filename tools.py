@@ -51,33 +51,16 @@ def calc_days_until_now(time):
     return duration.days
 
 
-UserNotFound = -1
-
-
-def find_in_usrs(users, uid):
-    """
-    :param users: a list of User objects
-    :param uid: an int, the target uid
-    :return: the index of User of the specific uid or NotFound
-    """
-    ind = 0
-    while ind < len(users) and users[ind].usr_id != uid:
-        ind += 1
-    if ind < len(users) and users[ind].usr_id == uid:
-        return ind
-    else:
-        return UserNotFound
-
-    
 def get_num_at_begin(str):
     i = 1
     for i in range(1, len(str)+1):
         if not str[:i].isdigit():
             i -= 1
             break
-    return int(str[:i])    
+    return int(str[:i])
 
 
 if __name__ == "__main__":
-    print(null_time)
+    # print(null_time)
     print(calc_days_until_now(Datetime(1970, 1, 1)))
+    print(get_num_at_begin("1213fasga"))
