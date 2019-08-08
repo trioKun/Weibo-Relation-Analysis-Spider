@@ -12,7 +12,7 @@ class User:
         self.fan_num = 0               # the number of fans
         self.tweet_num = 0              # the number of tweets
         self.last_tweet_time = null_time        # when the user last tweeted a original content
-        if uid:
+        if uid != 0:
             self.get_info()
         # tree node attributes
         self.dist = 0              # distance to root during BFS
@@ -27,7 +27,11 @@ class User:
             print("Region:      %s" % self.location, file=file)
             print("Followers:   %d" % self.fan_num, file=file)
             print("Tweets:      %d" % self.tweet_num, file=file)
-            print("Last Tweet:  %s" % self.last_tweet_time, file=file)
+            print("Last Tweet:  ", end='', file=file)
+            if self.last_tweet_time != null_time:
+                print(self.last_tweet_time, file=file)
+            else:
+                print("Null", file=file)
             print("Home Page:   https://weibo.com/%d" % self.usr_id, file=file)
         else:
             print("NoneUser", file=file)
@@ -44,7 +48,6 @@ class User:
 
         follow_uids = []
         total_page_num = self.get_follow_page_num()
-        # total_page_num = min(2, total_page_num)
         for pg in range(1, total_page_num+1):
             follow_uids += self.get_follow_in_page(pg)
         return follow_uids
@@ -63,7 +66,7 @@ class User:
 
 
 if __name__ == "__main__":
-    user_id = 0
+    user_id = 0              # put user ID here
     user = User(user_id)
-    user.show()
+    user.show()                  # check if User works well
     print(user.follow_uid_list)
