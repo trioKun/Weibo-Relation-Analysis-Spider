@@ -7,6 +7,23 @@ This project is based on dataabc/weiboSpider ( https://github.com/dataabc/weiboS
 
 本项目基于dataabc/weiboSpider。感谢每个贡献者！
 
+## 功能说明
+1）这是一个基于爬虫的微博关注链自动分析脚本。
+
+2）分析器的基本思想和微博自带的推荐“你关注的XX也关注了YY”类似。分析器通过爬取用户关注列表，利用BFS深入到关注链的任意层，从而挖掘出很多你可能认识的人。
+
+3）作为一个例子，运行分析器，你将获得一个包括如下信息的用户列表。Level是指关注链层次，1表示你直接关注了该用户，2表示你直接关注的用户关注了该用户，依此类推。Score用于表征该用户与你的关系网的相关程度，你也可以自定义Score的各项因子权重。
+
+    Nickname:         兴趣使然的英雄
+    Gender:           男
+    Region:           北京 海淀区
+    Followers:        638
+    Tweets:           142
+    Last Tweet:       2019-05-11 04:06
+    Home Page:        https://weibo.com/1234567890
+    Relation Level:     3
+    Relation Score:     90
+
 ## 使用说明
 1）下载脚本文件到某个文件夹下，安装所需的库或模块。确认能够访问weibo.cn，保持网络畅通。
 
@@ -21,17 +38,7 @@ This project is based on dataabc/weiboSpider ( https://github.com/dataabc/weiboS
 
 6）完成前5条后，你已经完成了所有准备工作。现在，你只需要在analyzer.py中填入相应参数，指定根用户uid与搜索最大层次level，即可运行脚本开始爬取数据并分析。越高的层次所需的分析时间越长，2-3层的分析一般需要15-60分钟，具体取决于关系网的广度。
 
-7）分析器顺利返回后，你将获得一个类似下图的用户列表。
-
-    Nickname:         兴趣使然的英雄
-    Gender:           男
-    Region:           北京 海淀区
-    Followers:        638
-    Tweets:           142
-    Last Tweet:       2019-05-11 04:06
-    Home Page:        https://weibo.com/1234567890
-    Relation Level:     3
-    Relation Score:     90
+7）分析器顺利返回后，你将获得一个如前所述的用户列表。
 
 8）自定义部分：你可以按照实际情况选择最大子线程数threads，这一般取决于你所有的cookie数。一方面，提高子线程并发程度将有助于缓和request响应慢的问题，从而加快程序运行，另一方面，高并发带来的高request频率将提高网页无响应的概率，从而减慢程序运行。
 你也可以自定义analyzer.py中的scoring函数，该函数用于计算决定输出排序的关系得分(Relation Score)，该得分用于表征对应用户与根用户关系网的相关程度，你可以按自己的标准更改scoring中的各项权重，甚至可以添加其他的相关项。
